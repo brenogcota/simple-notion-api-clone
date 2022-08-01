@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Page {
+  object   String    @default("page")
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  cover    Image?
+  icon     String?
+  property Property?
+  name     String
+  url      String
+  children Block[]
+}
+
+type Block {
+  object       String  @default("block")
+  type         String
+  content      Text
+  has_children Boolean @default(false)
+}
+
+type Image {
+  link Link
+  name String
+}
+
+type Link {
+  url String
+}
+
+type Property {
+  Name        Text
+  Description Text?
+}
+
+type Text {
+  type        String
+  text        TextContent
+  annotations Annotations
+  checked     Boolean?    @default(false)
+  language    String?
+}
+
+type Annotations {
+  italic    Boolean @default(false)
+  bold      Boolean @default(false)
+  code      Boolean @default(false)
+  underline Boolean @default(false)
+  color     String?
+  link      Link?
+}
+
+type TextContent {
+  content String
+  link    Link?
+}
